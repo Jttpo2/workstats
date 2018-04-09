@@ -5,7 +5,8 @@ let ids = {
   totalTips: 'totalTips',
   kitchenTips: 'kitchenTips',
   whiteHours: 'whiteHours',
-  salesTotal: 'salesTotal'
+  salesTotal: 'salesTotal',
+  comment: 'comment'
 };
 
 let reArray = [
@@ -23,18 +24,17 @@ function stringToWorkday(entry) {
   let workdayMap = new Map();
 
   regexes.forEach(function(re, key, map) {
-    workdayMap.set(key, getFirstMatchStringFrom(entry, re))
+    let match = getFirstMatchStringFrom(entry, re);
+    workdayMap.set(key, convertToNumber(match));
   });
 
-  // Replace ','s with '.'s
-  let whiteHours = workdayMap.get(ids.whiteHours);
-  workdayMap.set(ids.whiteHours, whiteHours.replace(',', '.'));
+  workdayMap.set(ids.comment, extractComment(entry))
 
   return workdayMap;
 }
 
-function getFirstMatchStringFrom(note, re) {
-  let matchArray = re.exec(note);
+function getFirstMatchStringFrom(entry, re) {
+  let matchArray = re.exec(entry);
   if (matchArray) {
     return matchArray[0];
   } else {
@@ -42,8 +42,25 @@ function getFirstMatchStringFrom(note, re) {
   }
 }
 
+function extractComment(entry) {
+  entryCopy = entry;
+  regexes.forEach(function(re, key, map) {
+    entryCopy = entryCopy.replace(re, '');
+  });
+  return entryCopy.trim();
+
+}
+
+function convertToNumber(entry) {
+  return parseFloat(entry.replace(',', '.'));
+}
+
+// ***********************************
+
 let note1 = '180401 13-22 4,5v 4376s 159/9';
 let note2 = '171227 14-2330 440/20 4,5v 7533s';
+let note3 = '171228 14-2330 340/30 4,5v 12659s Leif 5000:-';
+let note4 = '171221 1730-2130 v libanesiskt julbord-hjälp';
 
-let workday = stringToWorkday(note1);
+let workday = stringToWorkday(note3);
 console.log(workday);
