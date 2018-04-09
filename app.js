@@ -1,13 +1,3 @@
-// let re = {
-//   date: /^\d{6}\b/, // 6 digits at beginning of line with trailing whitespace
-//   startTime: /\b(?:\d{2}|\d{4})(?=\-)/, // 2 or 4 digits at start of word followed by '-'
-//   endTime: /(?<=-)(?:\d{2}|\d{4})\b/, //2 or 4 digits preceded by '-' followed by word boundary
-//   totalTips: /\b\d+(?=\/)/, // one or more digits at start of word followed by forward slash
-//   kitchenTips: /(?<=\/)(?:\d+)\b/, // one or more digits preceded by forward slash, at end of word
-//   whiteHours: /\b[0-9,\.]+(?=v\b)/, // one or more digits or ',' or '.' followed by 'v' at end of word
-//   salesTotal: /\b\d+(?=s\b)/ // one or more digits at start of word, followed by letter 's' at end of word
-// };
-//
 let ids = {
   date: 'date',
   startTime : 'startTime',
@@ -18,18 +8,6 @@ let ids = {
   salesTotal: 'salesTotal'
 };
 
-let idArray = [
-  ['date', 'date'],
-  ['startTime', 'startTime'],
-  ['endTime', 'endTime'],
-  ['totalTips', 'totalTips'],
-  ['kitchenTips', 'kitchenTips'],
-  ['whiteHours', 'whiteHours'],
-  ['salesTotal', 'salesTotal']
-];
-
-// let ids = new Map(idArray);
-
 let reArray = [
   [ids.date, /^\d{6}\b/], // 6 digits at beginning of line with trailing whitespace
   [ids.startTime, /\b(?:\d{2}|\d{4})(?=\-)/], // 2 or 4 digits at start of word followed by '-'
@@ -39,7 +17,6 @@ let reArray = [
   [ids.whiteHours, /\b[0-9,\.]+(?=v\b)/], // one or more digits or ',' or '.' followed by 'v' at end of word
   [ids.salesTotal, /\b\d+(?=s\b)/] // one or more digits at start of word, followed by letter 's' at end of word
 ];
-
 let regexes = new Map(reArray);
 
 function stringToWorkday(entry) {
@@ -49,17 +26,9 @@ function stringToWorkday(entry) {
     workdayMap.set(key, getFirstMatchStringFrom(entry, re))
   });
 
+  // Replace ','s with '.'s
   let whiteHours = workdayMap.get(ids.whiteHours);
   workdayMap.set(ids.whiteHours, whiteHours.replace(',', '.'));
-
-  // let workday = {};
-  // workday.date = getFirstMatchStringFrom(entry, re.date);
-  // workday.startTime = getFirstMatchStringFrom(entry, re.startTime);
-  // workday.endTime = getFirstMatchStringFrom(entry, re.endTime);
-  // workday.totalTips = getFirstMatchStringFrom(entry, re.totalTips);
-  // workday.kitchenTips = getFirstMatchStringFrom(entry, re.kitchenTips);
-  // workday.whiteHours = getFirstMatchStringFrom(entry, re.whiteHours).replace(',', '.');
-  // workday.salesTotal = getFirstMatchStringFrom(entry, re.salesTotal);
 
   return workdayMap;
 }
